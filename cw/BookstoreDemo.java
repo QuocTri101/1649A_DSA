@@ -5,7 +5,7 @@ import java.util.Scanner; // Imported for console input
 
 /**
  * ===================================================================
- * Main Demo Class (BookstoreDemo) - INTERACTIVE CONSOLE VERSION
+ * Main Demo Class (BookstoreDemo) - UPDATED WITH VIEW QUEUE
  * ===================================================================
  */
 public class BookstoreDemo {
@@ -20,10 +20,16 @@ public class BookstoreDemo {
 
         // Pre-populate a "Database" for the SEARCH feature (Must be sorted by ID)
         Order[] allOrders = {
-            new Order(1001, "Customer A", "Shipped", new String[]{"The Lion"}),
-            new Order(1004, "Customer B", "Pending", new String[]{"Moby Dick", "1984"}),
-            new Order(1012, "Customer D", "Processing", new String[]{"War and Peace"}),
-            new Order(1020, "Customer E", "Delivered", new String[]{"The Odyssey"})
+            new Order(1001, "Tuan Anh",   "Shipped",    new String[]{"Java Basics", "OOP Intro"}),
+            new Order(1002, "Minh Tu",    "Pending",    new String[]{"Data Structures"}),
+            new Order(1003, "Hoang Hai",  "Processing", new String[]{"Algorithms"}),
+            new Order(1004, "Bao Chau",   "Delivered",  new String[]{"Moby Dick", "1984"}),
+            new Order(1005, "Viet Hoang", "Cancelled",  new String[]{"Clean Code"}),
+            new Order(1006, "Thanh Ha",   "Shipped",    new String[]{"Design Patterns"}),
+            new Order(1007, "Duc Thang",  "Pending",    new String[]{"C# for Beginners"}),
+            new Order(1008, "Ngoc Lan",   "Processing", new String[]{"Web Development"}),
+            new Order(1009, "Quoc Bao",   "Delivered",  new String[]{"Docker Guide"}),
+            new Order(1010, "Phuong Thao","Shipped",    new String[]{"Microservices"})
         };
 
         while (true) {
@@ -78,15 +84,18 @@ public class BookstoreDemo {
                         
                         System.out.print("Enter Books (comma separated, e.g., Book A, Book B): ");
                         String booksInput = scanner.nextLine();
-                        // Split string by comma
                         String[] books = booksInput.split(",");
-                        // Trim whitespace
                         for(int i=0; i<books.length; i++) books[i] = books[i].trim();
 
                         Order newOrder = new Order(id, name, "Pending", books);
                         newOrders.enqueue(newOrder);
+                        
                         System.out.println("-> Order #" + id + " added to the processing queue.");
                         
+                        // --- NEW: View the queue immediately to confirm ---
+                        newOrders.viewQueue();
+                        // ------------------------------------------------
+
                     } catch (NumberFormatException e) {
                         System.out.println("(!) Error: Order ID must be a number.");
                     }
@@ -115,7 +124,13 @@ public class BookstoreDemo {
 
                 case 5:
                     // SEARCH
-                    System.out.println("--- Search Database (Available IDs: 1001, 1004, 1012, 1020) ---");
+                    System.out.println("--- Search Database (Available IDs: 1001 to 1010) ---");
+                    // Show Index List for reference
+                    for(int i=0; i<allOrders.length; i++) {
+                         System.out.println("[" + i + "] ID: " + allOrders[i].orderId + " | Name: " + allOrders[i].customerName);
+                    }
+                    System.out.println("-----------------------------------------------------");
+
                     System.out.print("Enter Order ID to search: ");
                     try {
                         int searchId = Integer.parseInt(scanner.nextLine());
@@ -152,7 +167,7 @@ public class BookstoreDemo {
  * ===================================================================
  */
 
-// --- Class 1: BookStack (Stack ADT - LIFO) ---
+// --- Class 1: BookStack (Keep logic same) ---
 class BookStack {
     private String[] stackArray;
     private int top;
@@ -165,16 +180,60 @@ class BookStack {
     public boolean isFull() { return (top == maxSize - 1); }
 }
 
-// --- Class 2: OrderQueue (Queue ADT - FIFO) ---
+// --- Class 2: OrderQueue (UPDATED with viewQueue) ---
 class OrderQueue {
     private Order[] queueArray;
     private int maxSize, front, rear, currentSize;
-    public OrderQueue(int size) { this.maxSize = size; this.queueArray = new Order[maxSize]; this.front = 0; this.rear = -1; this.currentSize = 0; }
-    public void enqueue(Order item) { if (isFull()) { System.out.println("Queue is full."); return; } if (rear == maxSize - 1) rear = -1; queueArray[++rear] = item; currentSize++; }
-    public Order dequeue() { if (isEmpty()) throw new NoSuchElementException(); Order temp = queueArray[front++]; if (front == maxSize) front = 0; currentSize--; return temp; }
-    public Order peek() { if (isEmpty()) throw new NoSuchElementException(); return queueArray[front]; }
+
+    public OrderQueue(int size) { 
+        this.maxSize = size; 
+        this.queueArray = new Order[maxSize]; 
+        this.front = 0; 
+        this.rear = -1; 
+        this.currentSize = 0; 
+    }
+
+    public void enqueue(Order item) { 
+        if (isFull()) { System.out.println("(!) Queue is full."); return; } 
+        if (rear == maxSize - 1) rear = -1; 
+        queueArray[++rear] = item; 
+        currentSize++; 
+    }
+
+    public Order dequeue() { 
+        if (isEmpty()) throw new NoSuchElementException(); 
+        Order temp = queueArray[front++]; 
+        if (front == maxSize) front = 0; 
+        currentSize--; 
+        return temp; 
+    }
+
+    public Order peek() { 
+        if (isEmpty()) throw new NoSuchElementException(); 
+        return queueArray[front]; 
+    }
+
     public boolean isEmpty() { return (currentSize == 0); }
     public boolean isFull() { return (currentSize == maxSize); }
+
+    // --- NEW: Print the Queue ---
+    public void viewQueue() {
+        if (isEmpty()) {
+            System.out.println("   (Queue is currently empty)");
+            return;
+        }
+        System.out.println("   [CURRENT QUEUE STATUS]");
+        
+        int tempFront = front;
+        for (int i = 0; i < currentSize; i++) {
+            Order o = queueArray[tempFront];
+            System.out.println("   + Pos " + (i+1) + ": Order #" + o.orderId + " (" + o.customerName + ")");
+            
+            tempFront++;
+            if (tempFront == maxSize) tempFront = 0;
+        }
+        System.out.println("   ----------------------");
+    }
 }
 
 // --- Class 3: Order ---
@@ -184,7 +243,7 @@ class Order implements Comparable<Order> {
     @Override public int compareTo(Order other) { return Integer.compare(this.orderId, other.orderId); }
 }
 
-// --- Class 4: BookstoreAlgorithms (Sort and Search) ---
+// --- Class 4: BookstoreAlgorithms ---
 class BookstoreAlgorithms {
     public static void binaryInsertionSort(String[] arr) {
         int n = arr.length;
