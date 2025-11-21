@@ -7,16 +7,16 @@ public class SortingDemo {
     // A larger, static "master list" of 50 books
     private static final String[] MASTER_BOOK_LIST = {
         "The Hobbit", "A Brief History of Time", "1984", "Moby Dick", "Pride and Prejudice",
-        // "The Great Gatsby", "War and Peace", "Don Quixote", "Ulysses", "The Catcher in the Rye",
-        // "To Kill a Mockingbird", "Brave New World", "The Lord of the Rings", "Fahrenheit 451", "Jane Eyre",
-        // "Crime and Punishment", "Wuthering Heights", "Anna Karenina", "The Adventures of Huckleberry Finn", "Catch-22",
-        // "One Hundred Years of Solitude", "The Sound and the Fury", "Dracula", "Frankenstein", "The Odyssey",
+        "The Great Gatsby", "War and Peace", "Don Quixote", "Ulysses", "The Catcher in the Rye",
+        "To Kill a Mockingbird", "Brave New World", "The Lord of the Rings", "Fahrenheit 451", "Jane Eyre",
+        "Crime and Punishment", "Wuthering Heights", "Anna Karenina", "The Adventures of Huckleberry Finn", "Catch-22",
+        "One Hundred Years of Solitude", "The Sound and the Fury", "Dracula", "Frankenstein", "The Odyssey",
 
-        // "Alice's Adventures in Wonderland", "Treasure Island", "The Scarlet Letter", "Gulliver's Travels", "A Tale of Two Cities",
-        // "Little Women", "Great Expectations", "Oliver Twist", "The Three Musketeers", "The Call of the Wild",
-        // "20,000 Leagues Under the Sea", "The Picture of Dorian Gray", "The Grapes of Wrath", "The Count of Monte Cristo", "The Old Man and the Sea",
-        // "The Lion, the Witch, and the Wardrobe", "Anne of Green Gables", "Lord of the Flies", "The Stranger", "Gone with the Wind",
-        // "Of Mice and Men", "White Fang", "The Jungle", "Persuasion", "Candide"
+        "Alice's Adventures in Wonderland", "Treasure Island", "The Scarlet Letter", "Gulliver's Travels", "A Tale of Two Cities",
+        "Little Women", "Great Expectations", "Oliver Twist", "The Three Musketeers", "The Call of the Wild",
+        "20,000 Leagues Under the Sea", "The Picture of Dorian Gray", "The Grapes of Wrath", "The Count of Monte Cristo", "The Old Man and the Sea",
+        "The Lion, the Witch, and the Wardrobe", "Anne of Green Gables", "Lord of the Flies", "The Stranger", "Gone with the Wind",
+        "Of Mice and Men", "White Fang", "The Jungle", "Persuasion", "Candide"
     };
 
     public static void main(String[] args) {
@@ -67,8 +67,29 @@ public class SortingDemo {
         long endTime4 = System.nanoTime();
         
         printSortResult("QuickSort", books4, (endTime4 - startTime4));
+    
+       // --- 5. Test Bubble Sort (NEWLY ADDED) ---
+        System.out.println("--- 5. Testing Bubble Sort ---");
+        Collections.shuffle(bookList); // Shuffle again
+        String[] books5 = bookList.toArray(new String[0]);
+        
+        long startTime5 = System.nanoTime();
+        BubbleSort.sort(books5); // Calling the new BubbleSort class
+        long endTime5 = System.nanoTime();
+        
+        printSortResult("Bubble Sort", books5, (endTime5 - startTime5));
+    
+           // --- 6. Test Selection Sort (NEWLY ADDED) ---
+        System.out.println("--- 6. Testing Selection Sort ---");
+        Collections.shuffle(bookList); // Shuffle again
+        String[] books6 = bookList.toArray(new String[0]);
+        
+        long startTime6 = System.nanoTime();
+        SelectionSort.sort(books6); 
+        long endTime6 = System.nanoTime();
+        
+        printSortResult("Selection Sort", books6, (endTime6 - startTime6));
     }
-
     /**
      * Helper method to print a clean summary of the sort result.
      * It shows the first few and the last element to prove it's sorted
